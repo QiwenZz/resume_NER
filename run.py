@@ -85,7 +85,7 @@ def generate_data(test=False):
 
 def main(targets):
     if "test" in targets:
-        subprocess.run(["python", "-m", "spacy", "train", "config/config.cfg", "--output", "./output",\
+        subprocess.run(["python", "-m", "spacy", "train", "config/config_test.cfg", "--output", "./output",\
                     "--paths.train", "./data/train.spacy", "--paths.dev", "./data/test.spacy"])
     else:
         subprocess.run(["python", "-m", "spacy", "train", "config/config.cfg", "--output", "./output",\
