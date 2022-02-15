@@ -3,11 +3,8 @@ import random
 import logging
 import spacy
 import sys
-from sklearn.metrics import classification_report
-from sklearn.metrics import precision_recall_fscore_support
-from spacy.gold import GoldParse
-from spacy.scorer import Scorer
-from sklearn.metrics import accuracy_score
+import re
+import tqdm
 
 def convert_dataturks_to_spacy(dataturks_JSON_FilePath):
     try:
@@ -39,3 +36,33 @@ def convert_dataturks_to_spacy(dataturks_JSON_FilePath):
     except Exception as e:
         logging.exception("Unable to process " + dataturks_JSON_FilePath + "\n" + "error = " + str(e))
         return None
+
+def trim_entity_spans(data: list) -> list:
+    """Removes leading and trailing white spaces from entity spans.
+
+    Args:
+        data (list): The data to be cleaned in spaCy JSON format.
+
+    Returns:
+        list: The cleaned data.
+    """
+    invalid_span_tokens = re.compile(r'\s')
+
+    cleaned_data = []
+    for text, annotations in data:
+        entities = annotations['entities']
+        valid_entities = []
+        for start, end, label in entities:
+            valid_start = start
+            valid_end = end
+            while valid_start < len(text) and invalid_span_tokens.match(
+                    text[valid_start]):
+                valid_start += 1
+            while valid_end > 1 and invalid_span_tokens.match(
+                    text[valid_end - 1]):
+                valid_end -= 1
+
+            valid_entities.append([valid_start, valid_end, label])
+        cleaned_data.append([text, {'entities': valid_entities}])
+
+    return cleaned_data
