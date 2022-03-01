@@ -5,6 +5,7 @@ import spacy
 import sys
 import re
 import tqdm
+import glob
 
 def convert_dataturks_to_spacy(dataturks_JSON_FilePath):
     try:
@@ -28,10 +29,7 @@ def convert_dataturks_to_spacy(dataturks_JSON_FilePath):
                 for label in labels:
                     #dataturks indices are both inclusive [start, end] but spacy is not [start, end)
                     entities.append((point['start'], point['end'] + 1 ,label))
-
-
-            training_data.append((text, {"entities" : entities}))
-
+            training_data.append((text, {"entities": entities}))
         return training_data
     except Exception as e:
         logging.exception("Unable to process " + dataturks_JSON_FilePath + "\n" + "error = " + str(e))
@@ -66,3 +64,34 @@ def trim_entity_spans(data: list) -> list:
         cleaned_data.append([text, {'entities': valid_entities}])
 
     return cleaned_data
+
+def read_data(path):
+    training_data = []
+    json_lst = glob.glob(path)
+    for direc in json_lst:
+        f = open(direc)
+        data = json.load(f)
+        for text, entity in data['annotations']:
+            if (len(text) != 0) and (len(entity['entities'])!=0):
+                training_data.append((text, entity))
+        f.close()
+    return training_data
+
+def correct_label(label):
+    label_correction_dic = {'Email Address': 'EMAIL ADDRESS',
+                            'College Name': 'COLLEGE NAME',
+                            'Degree': 'DEGREE',
+                            'Location': 'LOCATION',
+                            'Skills': 'SKILLS',
+                            'Companies worked at': 'COMPANIES WORKED AT',
+                            'Name': 'NAME',
+                            'DESIGNATION ': 'DESIGNATION',
+                            'Designation': 'DESIGNATION',
+                            'Years of Experience': 'YEARS OF EXPERIENCE',
+                            'Graduation Year': 'GRADUATION YEAR'
+                            }
+    if label in label_correction_dic:
+        return label_correction_dic[label]
+    return label
+
+

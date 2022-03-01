@@ -5,10 +5,11 @@ import os
 from tqdm import tqdm
 import spacy
 from spacy.tokens import DocBin
-from src.src import convert_dataturks_to_spacy, trim_entity_spans
+from src.src import convert_dataturks_to_spacy, trim_entity_spans, correct_label
 from spacy.util import filter_spans
 import sys
 import subprocess
+import json
 
 
 ################### Train Spacy NER.###########
@@ -20,7 +21,14 @@ def generate_data(test=False):
         train_fp = "../data/train.json"
         test_fp = "../data/test.json"
 
-    TRAIN_DATA = trim_entity_spans(convert_dataturks_to_spacy(train_fp))
+    TRAIN_DATA = convert_dataturks_to_spacy(train_fp)
+    with open('./data/manually_annotation.json', 'r') as f:
+        lines = f.readlines()
+    for line in lines:
+        data = json.loads(line)
+        for text, annotation in data:
+            TRAIN_DATA.append((text, annotation))
+    TRAIN_DATA = trim_entity_spans(TRAIN_DATA)
     TEST_DATA = trim_entity_spans(convert_dataturks_to_spacy(test_fp))
     nlp = spacy.blank('en')  # create blank Language class
 
@@ -32,7 +40,9 @@ def generate_data(test=False):
         for start, end, label in annot["entities"]:  # add character indexes
             if start>end:
                 continue
-            span = doc.char_span(start, end, label=label, alignment_mode="strict")
+            if label == 'Unlabelled' or label == 'UNKNOWN':
+                continue
+            span = doc.char_span(start, end, label=correct_label(label), alignment_mode="strict")
             if span is None:
                 print("Skipping entity")
             elif (span.text[0]==' ') or (span.text[-1]==' '):
@@ -55,6 +65,7 @@ def generate_data(test=False):
     TEST_DATA = trim_entity_spans(convert_dataturks_to_spacy(test_fp))
     nlp = spacy.blank('en')  # create blank Language class
 
+
     db = DocBin()  # create a DocBin object
 
     for text, annot in tqdm(TEST_DATA):  # data in previous format
@@ -63,7 +74,9 @@ def generate_data(test=False):
         for start, end, label in annot["entities"]:  # add character indexes
             if start > end:
                 continue
-            span = doc.char_span(start, end, label=label, alignment_mode="strict")
+            if label == 'Unlabelled' or label == 'UNKNOWN':
+                continue
+            span = doc.char_span(start, end, label=correct_label(label), alignment_mode="strict")
             if span is None:
                 print("Skipping entity")
             elif (span.text[0] == ' ') or (span.text[-1] == ' '):
@@ -84,6 +97,7 @@ def generate_data(test=False):
     db.to_disk("./test.spacy")  # save the docbin object
 
 def main(targets):
+    #generate_data(True)
     if "test" in targets:
         subprocess.run(["python", "-m", "spacy", "train", "config/config_test.cfg", "--output", "./output",\
                     "--paths.train", "./data/train.spacy", "--paths.dev", "./data/test.spacy"])
