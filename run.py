@@ -1,111 +1,47 @@
 # DSC180B Code checkpoint
 # Feb 14,2022
 
-import os
-from tqdm import tqdm
-import spacy
-from spacy.tokens import DocBin
-from src.src import convert_dataturks_to_spacy, trim_entity_spans, correct_label
-from spacy.util import filter_spans
 import sys
 import subprocess
-import json
+import argparse
+from datetime import datetime
+
 
 
 ################### Train Spacy NER.###########
-def generate_data(test=False):
-    if test == True:
-        train_fp = "./test/traindata.json"
-        test_fp = "./test/testdata.json"
+
+def main(args):
+    if args['fine_tuning'] is False:
+        config_path = "config/no_fine_tuning_config.cfg"
+        output_path = "./output/fine_tuning/{}".format(args['path'])
     else:
-        train_fp = "../data/train.json"
-        test_fp = "../data/test.json"
-
-    TRAIN_DATA = convert_dataturks_to_spacy(train_fp)
-    with open('./data/manually_annotation.json', 'r') as f:
-        lines = f.readlines()
-    for line in lines:
-        data = json.loads(line)
-        for text, annotation in data:
-            TRAIN_DATA.append((text, annotation))
-    TRAIN_DATA = trim_entity_spans(TRAIN_DATA)
-    TEST_DATA = trim_entity_spans(convert_dataturks_to_spacy(test_fp))
-    nlp = spacy.blank('en')  # create blank Language class
-
-    db = DocBin()  # create a DocBin object
-
-    for text, annot in tqdm(TRAIN_DATA):  # data in previous format
-        doc = nlp.make_doc(text)  # create doc object from text
-        ents = []
-        for start, end, label in annot["entities"]:  # add character indexes
-            if start>end:
-                continue
-            if label == 'Unlabelled' or label == 'UNKNOWN':
-                continue
-            span = doc.char_span(start, end, label=correct_label(label), alignment_mode="strict")
-            if span is None:
-                print("Skipping entity")
-            elif (span.text[0]==' ') or (span.text[-1]==' '):
-                print("Encountered Whitespace")
-            else:
-                ents.append(span)
-        # pat_orig = len(ents)
-        filtered = filter_spans(ents)  # THIS DOES THE TRICK
-        # pat_filt = len(filtered)
-        doc.ents = filtered
-
-        # print("\nCONVERSION REPORT:")
-        # print("Original number of patterns:", pat_orig)
-        # print("Number of patterns after overlapping removal:", pat_filt)
-        #doc.ents = ents  # label the text with the ents
-        db.add(doc)
-    os.chdir(r'./data')
-    db.to_disk("./train.spacy")  # save the docbin object
-
-    TEST_DATA = trim_entity_spans(convert_dataturks_to_spacy(test_fp))
-    nlp = spacy.blank('en')  # create blank Language class
-
-
-    db = DocBin()  # create a DocBin object
-
-    for text, annot in tqdm(TEST_DATA):  # data in previous format
-        doc = nlp.make_doc(text)  # create doc object from text
-        ents = []
-        for start, end, label in annot["entities"]:  # add character indexes
-            if start > end:
-                continue
-            if label == 'Unlabelled' or label == 'UNKNOWN':
-                continue
-            span = doc.char_span(start, end, label=correct_label(label), alignment_mode="strict")
-            if span is None:
-                print("Skipping entity")
-            elif (span.text[0] == ' ') or (span.text[-1] == ' '):
-                print("Encountered Whitespace")
-            else:
-                ents.append(span)
-        # pat_orig = len(ents)
-        filtered = filter_spans(ents)  # THIS DOES THE TRICK
-        # pat_filt = len(filtered)
-        doc.ents = filtered
-
-        # print("\nCONVERSION REPORT:")
-        # print("Original number of patterns:", pat_orig)
-        # print("Number of patterns after overlapping removal:", pat_filt)
-        # doc.ents = ents  # label the text with the ents
-        db.add(doc)
-    os.chdir(r'./data')
-    db.to_disk("./test.spacy")  # save the docbin object
-
-def main(targets):
-    #generate_data(True)
-    if "test" in targets:
-        subprocess.run(["python", "-m", "spacy", "train", "config/config_test.cfg", "--output", "./output",\
-                    "--paths.train", "./data/train.spacy", "--paths.dev", "./data/test.spacy"])
+        config_path = "config/config.cfg"
+        output_path = "./output/no_fine_tuning/{}".format(args['path'])
+    if args['test'] is True:
+        config_path = "config/config_test.cfg"
+        output_path = "./output/test/{}".format(args['path'])
+    if args['original_data'] is True:
+        train_path = "./data/original_train.spacy"
+        test_path = "./data/original_test.spacy"
     else:
-        subprocess.run(["python", "-m", "spacy", "train", "config/config.cfg", "--output", "./output",\
-                    "--paths.train", "./data/train.spacy", "--paths.dev", "./data/test.spacy"])
+        train_path = "./data/train.spacy"
+        test_path = "./data/test.spacy"
+    subprocess.run(["python", "-m", "spacy", "train", config_path, "--output", output_path,\
+                "--paths.train", train_path, "--paths.dev", test_path])
+
 
 
 if __name__ == "__main__":
-    targets = sys.argv[1:]
-    main(targets)
+    parser = argparse.ArgumentParser(description='NER RESUME')
+    parser.add_argument('--test', default=False, type=lambda x: (str(x).lower() == 'true'),
+                        help='whether to run the test')
+    parser.add_argument('--fine-tuning', default=False, type=lambda x: (str(x).lower() == 'true'),
+                        help='whether to fine tune')
+    parser.add_argument('--original-data', default=False, type=lambda x: (str(x).lower() == 'true'),
+                        help='whether to use the original data(220 resumes)')
+    parser.add_argument('--path', default=datetime.now().strftime('%Y-%m-%d-%H%M%S'), type=str,
+                        help='Default log output path if not specified')
+
+    args = vars(parser.parse_args())
+    main(args)
+

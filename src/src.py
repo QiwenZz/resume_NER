@@ -65,6 +65,29 @@ def trim_entity_spans(data: list) -> list:
 
     return cleaned_data
 
+def trim_special_characters(data: list) -> list:
+
+    special_character = re.compile(r'\W')
+
+    cleaned_data = []
+    for text, annotations in data:
+        entities = annotations['entities']
+        valid_entities = []
+        for start, end, label in entities:
+            valid_start = start
+            valid_end = end
+            while valid_start < len(text) and special_character.match(
+                    text[valid_start]):
+                valid_start += 1
+            while valid_end > 1 and special_character.match(
+                    text[valid_end - 1]) and text[valid_end-1]!='#':
+                valid_end -= 1
+
+            valid_entities.append([valid_start, valid_end, label])
+        cleaned_data.append([text, {'entities': valid_entities}])
+
+    return cleaned_data
+
 def read_data(path):
     training_data = []
     json_lst = glob.glob(path)
