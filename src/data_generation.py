@@ -28,9 +28,9 @@ def generate_data(original):
         for line in lines:
             data = json.loads(line)
             try:
-                for text, annotation in data[:3000]:
+                for text, annotation in data[:6636]:
                     TRAIN_DATA.append((text, annotation))
-                for text, annotation in data[3000:]:
+                for text, annotation in data[6636:]:
                     TEST_DATA.append((text, annotation))
             except:
                 pass
