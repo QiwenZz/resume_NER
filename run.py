@@ -11,21 +11,27 @@ from datetime import datetime
 ################### Train Spacy NER.###########
 
 def main(args):
-    if args['fine_tuning'] is False:
-        config_path = "config/no_fine_tuning_config.cfg"
-        output_path = "./output/fine_tuning/{}".format(args['path'])
-    else:
-        config_path = "config/config.cfg"
-        output_path = "./output/no_fine_tuning/{}".format(args['path'])
-    if args['test'] is True:
-        config_path = "config/config_test.cfg"
-        output_path = "./output/test/{}".format(args['path'])
     if args['original_data'] is True:
         train_path = "./data/original_train.spacy"
         test_path = "./data/original_test.spacy"
+        output_path = "./output/origin_used"
     else:
         train_path = "./data/train.spacy"
         test_path = "./data/test.spacy"
+        output_path = "./output/expanded_used"
+    if args['fine_tuning'] is False:
+        config_path = "config/no_fine_tuning_config.cfg"
+        output_path += "/no_fine_tuning/{}".format(args['path'])
+    else:
+        config_path = "config/config.cfg"
+        output_path += "/fine_tuning/{}".format(args['path'])
+    if args['test'] is True:
+        config_path = "config/config_test.cfg"
+        output_path = "./output/test/{}".format(args['path'])
+
+    print('config path is:', config_path)
+    print('output path is:', output_path)
+    print('training and testing paths are:', train_path, test_path)
     subprocess.run(["python", "-m", "spacy", "train", config_path, "--output", output_path,\
                 "--paths.train", train_path, "--paths.dev", test_path])
 
@@ -41,6 +47,7 @@ if __name__ == "__main__":
                         help='whether to use the original data(220 resumes)')
     parser.add_argument('--path', default=datetime.now().strftime('%Y-%m-%d-%H%M%S'), type=str,
                         help='Default log output path if not specified')
+
 
     args = vars(parser.parse_args())
     main(args)
