@@ -1,7 +1,7 @@
 # resume_NER_w_BOND
 
 #### To run our code, please use: python run.py
-#### To test, please use: python run.py test
+#### To test, please use: python run.py --test=True
 
 <br />
 
