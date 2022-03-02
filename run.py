@@ -5,6 +5,7 @@ import sys
 import subprocess
 import argparse
 from datetime import datetime
+import torch
 
 
 
@@ -31,12 +32,15 @@ def main(args):
     if args['test'] is True:
         config_path = "config/config_test.cfg"
         output_path = "./output/test/{}".format(args['path'])
-
+    if torch.cuda.is_available():
+        cuda = '0'
+    else:
+        cuda = '-1'
     print('config path is:', config_path)
     print('output path is:', output_path)
     print('training and testing paths are:', train_path, test_path)
     subprocess.run(["python", "-m", "spacy", "train", config_path, "--output", output_path,\
-                "--paths.train", train_path, "--paths.dev", test_path])
+                "--paths.train", train_path, "--paths.dev", test_path, "--gpu-id", cuda])
 
 
 
