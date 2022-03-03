@@ -1,0 +1,106 @@
+{
+  "lang":"en",
+  "name":"pipeline",
+  "version":"0.0.0",
+  "spacy_version":">=3.2.1,<3.3.0",
+  "description":"",
+  "author":"",
+  "email":"",
+  "url":"",
+  "license":"",
+  "spacy_git_version":"800737b41",
+  "vectors":{
+    "width":0,
+    "vectors":0,
+    "keys":0,
+    "name":null,
+    "mode":"default"
+  },
+  "labels":{
+    "tok2vec":[
+
+    ],
+    "ner":[
+      "COLLEGE NAME",
+      "COMPANIES WORKED AT",
+      "DEGREE",
+      "DESIGNATION",
+      "EMAIL ADDRESS",
+      "GRADUATION YEAR",
+      "LOCATION",
+      "NAME",
+      "SKILLS",
+      "YEARS OF EXPERIENCE"
+    ]
+  },
+  "pipeline":[
+    "tok2vec",
+    "ner"
+  ],
+  "components":[
+    "tok2vec",
+    "ner"
+  ],
+  "disabled":[
+
+  ],
+  "performance":{
+    "ents_f":0.3680823681,
+    "ents_p":0.6088807786,
+    "ents_r":0.2637681159,
+    "ents_per_type":{
+      "NAME":{
+        "p":0.5476190476,
+        "r":0.203539823,
+        "f":0.2967741935
+      },
+      "DESIGNATION":{
+        "p":0.4158415842,
+        "r":0.1794871795,
+        "f":0.2507462687
+      },
+      "COMPANIES WORKED AT":{
+        "p":0.3529411765,
+        "r":0.170984456,
+        "f":0.2303664921
+      },
+      "LOCATION":{
+        "p":0.804494382,
+        "r":0.4486215539,
+        "f":0.5760257442
+      },
+      "EMAIL ADDRESS":{
+        "p":0.8387096774,
+        "r":0.7428571429,
+        "f":0.7878787879
+      },
+      "DEGREE":{
+        "p":0.7317073171,
+        "r":0.2479338843,
+        "f":0.3703703704
+      },
+      "COLLEGE NAME":{
+        "p":0.488372093,
+        "r":0.3181818182,
+        "f":0.3853211009
+      },
+      "SKILLS":{
+        "p":0.7030162413,
+        "r":0.2343387471,
+        "f":0.3515081206
+      },
+      "GRADUATION YEAR":{
+        "p":0.5238095238,
+        "r":0.1089108911,
+        "f":0.1803278689
+      },
+      "YEARS OF EXPERIENCE":{
+        "p":0.2519685039,
+        "r":0.1022364217,
+        "f":0.1454545455
+      }
+    },
+    "tok2vec_loss":2434.8198019727,
+    "ner_loss":4709.0820139786
+  }
+}
