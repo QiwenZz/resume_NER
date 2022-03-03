@@ -5,6 +5,7 @@ import sys
 import subprocess
 import argparse
 from datetime import datetime
+import torch
 
 
 
@@ -19,21 +20,27 @@ def main(args):
         train_path = "./data/train.spacy"
         test_path = "./data/test.spacy"
         output_path = "./output/expanded_used"
-    if args['fine_tuning'] is False:
-        config_path = "config/no_fine_tuning_config.cfg"
-        output_path += "/no_fine_tuning/{}".format(args['path'])
-    else:
+    if args['model'] == 'spacy':
         config_path = "config/config.cfg"
         output_path += "/fine_tuning/{}".format(args['path'])
+    elif args['model'] == 'bert':
+        config_path = "config/transformer.cfg"
+        output_path += "/fine_tuning/transformer/{}".format(args['path'])
+    elif args['model'] == 'scratch':
+        config_path = "config/no_fine_tuning_config.cfg"
+        output_path += "/no_fine_tuning/{}".format(args['path'])
     if args['test'] is True:
         config_path = "config/config_test.cfg"
         output_path = "./output/test/{}".format(args['path'])
-
+    if torch.cuda.is_available():
+        cuda = '0'
+    else:
+        cuda = '-1'
     print('config path is:', config_path)
     print('output path is:', output_path)
     print('training and testing paths are:', train_path, test_path)
     subprocess.run(["python", "-m", "spacy", "train", config_path, "--output", output_path,\
-                "--paths.train", train_path, "--paths.dev", test_path])
+                "--paths.train", train_path, "--paths.dev", test_path, "--gpu-id", cuda])
 
 
 
@@ -47,6 +54,8 @@ if __name__ == "__main__":
                         help='whether to use the original data(220 resumes)')
     parser.add_argument('--path', default=datetime.now().strftime('%Y-%m-%d-%H%M%S'), type=str,
                         help='Default log output path if not specified')
+    parser.add_argument('--model', default='spacy', type=str,
+                        help='which pre trained model to use on training')
 
 
     args = vars(parser.parse_args())

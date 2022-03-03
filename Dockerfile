@@ -38,8 +38,9 @@ RUN pip install setuptools wheel
 RUN pip install --upgrade pip
 
 RUN pip install cython
-RUN pip install -U spacy==2.0.18
-
+RUN pip install -U spacy
+RUN pip install -U torch torchvision torchaudio
+RUN pip install spacy[transformers,cuda112]
 #RUN pip install -U spacy
 
 
