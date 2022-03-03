@@ -2,7 +2,7 @@ import os
 import tqdm
 import spacy
 from spacy.tokens import DocBin
-from src import *
+from utils import *
 from spacy.util import filter_spans
 import sys
 import subprocess
