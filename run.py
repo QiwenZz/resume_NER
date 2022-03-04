@@ -14,11 +14,9 @@ import torch
 def main(args):
     if args['original_data'] is True:
         train_path = "./data/original_train.spacy"
-        test_path = "./data/original_test.spacy"
         output_path = "./output/origin_used"
     else:
         train_path = "./data/train.spacy"
-        test_path = "./data/test.spacy"
         output_path = "./output/expanded_used"
     if args['model'] == 'spacy':
         config_path = "config/config.cfg"
@@ -32,6 +30,12 @@ def main(args):
     if args['test'] is True:
         config_path = "config/config_test.cfg"
         output_path = "./output/test/{}".format(args['path'])
+    if args['validation_set'] == 'expanded':
+        test_path = "./data/test.spacy"
+        output_path += 'expanded'
+    else:
+        test_path = "./data/original_test.spacy"
+        output_path += 'expanded'
     if torch.cuda.is_available():
         cuda = '0'
     else:
@@ -56,6 +60,8 @@ if __name__ == "__main__":
                         help='Default log output path if not specified')
     parser.add_argument('--model', default='spacy', type=str,
                         help='which pre trained model to use on training')
+    parser.add_argument('--validation-set', default='expanded', type=str,
+                        help='which validation sets used to evaluate')
 
 
     args = vars(parser.parse_args())
