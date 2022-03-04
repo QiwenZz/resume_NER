@@ -6,7 +6,7 @@
 <br />
 
 Visit our website:
-https://qiwenzz.github.io/resume_NER_w_BOND/
+qiwenzz.github.io/resume_ner/
 
 ## Dataset
 We have obtained three different resume datasets from various data sources for the current project. The first dataset is downloaded from Kaggle. The second dataset is websraped from the website, postjobfree.com. The third dataset is downloaded from livecareer.com in pdf format, and then they are converted into text format for future processing.
