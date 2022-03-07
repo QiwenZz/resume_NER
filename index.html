@@ -1,179 +1,89 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<html lang="en">
 
-<html>
-	<head>
-		<title>DSC180 RESUME NER</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+ <title>DSC180B Capstone Project</title>
+ <link href="https://fonts.googleapis.com/css?family=Montserrat|Paytone+One&display=swap" rel="stylesheet" />
+ <link href="./styles/final_project.css" rel="stylesheet" />
+ <script src="./scripts/main.js"></script>
+</head>
 
-		<!-- Wrapper -->
-			<div id="wrapper" class="divided">
+<body>
 
-				<!-- One -->
-					<section class="banner style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right">
-						<div class="content">
-                            <h2><b>Resume Extraction and Summarization with NER</b></h2>
-							<h2>Introduction</h2>
-							<p class="major">The application we want to focus on is the automatic resume summarizer. This is an interesting problem because most resumes do not even get past the applicant tracking system. It causes unnecessary stress for both the recrutiers and applicants. We can use a NER model in this case to automatically mark the information on the resume corresponding to certain categories. </p>
-							<ul class="actions stacked">
-								<li><a href="#first" class="button big wide smooth-scroll-middle">Get Started</a></li>
-							</ul>
-						</div>
-						<div class="image">
-							<img src="images/p1alt.jpg" alt="" />
-						</div>
-					</section>
+ <div id="main">
+  <h1 id="titlename">Resume Information Extraction with NER</h1>
+  <p id="authorname"> Qiwen Zhang, Haibo Li, Judy Yang, Yufei Zhou</p >
+  <hr style="height:2px;border-width:0;color:rgb(252, 177, 177);background-color:rgb(248, 184, 184)">
+  <br >
+  <div>
+    <h2>Introduction</h2>
+    <p>Have you submitted resumes to tons of companies but failed to receive a single response? Have you been frustrated about job applications? Have you ever wondered why your resume is unable to get through the screening?</p>
+    <p>As soon-to-be graduates, these questions often occur to us. There is no doubt that a resume is the most important stepping stone to secure a job. Therefore, we want to focus on creating an automatic resume summarizer, where we implement Named Entity Recognition models to automatically highlight information on the resume; this will help people compare them with the job description in order to create a more refined and targeted resume.</p>
+  </div>
+  <hr  style="height:2px;border-width:0;color:rgb(252, 177, 177);background-color:rgb(248, 184, 184)">
+  <div>
+    <h2>Methodology & Approach</h2>
 
-				<!-- Two -->
-					<section class="spotlight style1 orient-right content-align-left image-position-center onscroll-image-fade-in" id="first">
-						<div class="content">
-							<h2>What is NER?</h2>
-							<p>Named Entity Recognition (NER) has always been important in downstream tasks such as building a knowledge graph, user internet modeling, question answering, dialogue systems, etc. as it allows us to extract real-world entities from text and label them using predefined types.</p>
-						</div>
-						<div class="image">
-							<img src="images/p2.png" alt="" />
-						</div>
-					</section>
+    <p>We use python’s <a href="https://spacy.io/usage/spacy-101"><b>spaCy</b></a> module for training the NER model. spaCy’s models are statistical and every “decision” they make is a prediction. The model is then shown the unlabelled text and will make a prediction. Because we know the correct answer, we can give the model feedback on its prediction in the form of an error gradient of the loss function that calculates the difference between the training example and the expected output. The greater the difference, the more significant the gradient and the updates to our model.</p>
+    <div><img src="./images/methodology_1.png" width="1100px" height="200px"></div>
+    <p>When training a model, we don’t just want it to memorize our examples — we want it to come up with a theory that can be generalized across other examples. In order to tune the accuracy, we process our training examples in batches, and experiment with minibatch sizes and dropout rates.</p>
+    <p>Three models are trained to predict the named entity.</p>
+    <h4>Submodels that are used in the training pipeline:</h4>
+      <ul>
+        <li><p><a href="https://spacy.io/api/architectures#Tok2Vec"><b>Token to vector model</b></a>: This model embed tokens into vectors that contain contextual information. It uses hash embedding to convert tokens to vectors which are context-independent and uses convolution with maxout activation function to learn context information.</p></li>
+        <li><p><a href="https://spacy.io/api/architectures#TransformerModel"><b>RoBERTa fine tuned</b></a>: A transformer model that maps tokens into vectors with contextual information.</p></li>
+        <li><p><a href="https://spacy.io/api/architectures#TransitionBasedParser"><b>Transition-based named entity recognition model</b></a>: It uses a transition-based parsing to predict the named entity using structure information.</p></li>
+      </ul>
+    <h4>Model Architecture:</h4>
+      <ul>
+        <li><p><b style=color:black>Baseline</b>: The baseline model includes a token to vector model and a transition-based named entity recognition model. </p></li>
+        <li><p><b style=color:black>RoBERTa fine tuned</b>: Includes a roberta-base model and a transition-based named entity recognition model.</p></li>
+        <li><p><a href="https://spacy.io/models/en#en_core_web_lg"><b>Spacy fine tuned</b></a>: Includes a pre-trained token to vector model by spacy and a transition-based named entity recognition model.</p></li>
+      </ul>
+  </div>
+  <hr  style="height:2px;border-width:0;color:rgb(252, 177, 177);background-color:rgb(248, 184, 184)">
+  <h2>Results / Impact</h2>
 
-				<!-- Three -->
-					<section class="spotlight style1 orient-right content-align-left image-position-center onscroll-image-fade-in">
-						<div class="content">
-							<h2>Resume Parser</h2>
-							<h5>Spacy(Placeholder)</h5>
-                            <h5>Dataset(Placeholder)</h5>
-                            <h5>Model Performance(Placeholder)</h5>
-                            <h5>Output(Placeholder)</h5>
-                            <h5></h5>
+  <div id="result"><img src="./images/result_1.png" width="600px" height="400px"></div>
+  <p>Model performance(3 models): We compared the f1 score, precision, and recall of all our three models. In general, the spaCy fine-tuned model has the highest f1 and precision, while the RoBERTa fine-tuned models have the highest recall.
+Our model performs surprisingly well on entity recognition especially on the “Education” section of each resume. It recognizes most of the important entities from the section with only a few left out.</p>
+  <p> This can be explained by the fact that entities in the “Education” section are usually identified with relatively unique words, such as “Bachelor of”, “Master of”, “XXX College”, etc. Other entities are usually identified with ambiguous words. For example, “Skills” are especially hard for the model to pick out as they are hidden in larger paragraphs and contain grammatical variants.</p>
+  <br>
+  <div id="result"><img src="./images/output.png" width="450px" height="700px"></div>
 
-						</div>
-					</section>
+  <hr  style="height:2px;border-width:0;color:rgb(252, 177, 177);background-color:rgb(248, 184, 184)">
+  <h2>Interactive Application Demo</h2>
+  <h3>Try it out yourself with a pdf version of your current resume and secure your next job application</h3>
+  <div>
+  <a href="https://dsc180nerweb.herokuapp.com/"><button class ="button button2">Start Demo</button></a>
+  </div>
 
-				<!-- Four -->
-					<section class="spotlight style1 orient-right content-align-left image-position-center onscroll-image-fade-in">
-						<div class="content">
-							<h2>Conclusion</h2>
-							<p>(Placeholder)From the data visualization part, based solely on the pre-trained entity recognition model provided by spacy, we can see that the performance is not very good when the task is specific to the resume information extraction domain. In the future, we decided to label the datasets we have currently, and train the model again. We would expect the performance to be increased as the training dataset only consisted of resumes. Once the model reaches a good performance, we are ready to put it into an web-based application.</p>
+  <br>
 
-						</div>
-						<div class="image">
-							<img src="images/p1 (2).png" alt="" />
-						</div>
-					</section>
+  <hr  style="height:2px;border-width:0;color:rgb(252, 177, 177);background-color:rgb(248, 184, 184)">
+  <h2>Conlusion</h2>
+  <h4>Reasons about different model performance</h4>
+  <ul>
+    <li><p>spaCy and RoBERTa both used pretrained models with more complex network and flexibility to handle named entity recognition tasks</p></li>
+    <li><p>spaCy takes an object oriented approach, white it is not used in our project, spaCy can support over 50 languages. spaCy provides the fastest and most accurate syntactic analysis of any NLP library released to date. It also offers access to larger word vectors that are easier to customize.</p></li>
+  </ul>
+  <h4>Drawbacks</h4>
+  <ul>
+    <li><p>Labeling does not follow a common standard</li>
+    <li><p>Training set is too small, but may show our method can be quite robust with larger training set</p></li>
+    <li><p>Sources of sample resumes are not diverse, many resumes may have similar patterns. The types of resumes may not be diverse enough as well.</p></li>
+  </ul>
+  <h4>How to improve in the future</h4>
+  <ul>
+    <li><p>Using more and more diverse types of resumes</li>
+    <li><p>Resume labeling follows a common standard</li>
+    <li><p>Making use of different pretrained models and fine-tuning the models with different hyperparameters as an attempt to improve the model performance</p></li>
+  </ul>
+  <hr  style="height:2px;border-width:0;color:rgb(252, 177, 177);background-color:rgb(248, 184, 184)">
 
-
-				<!-- Six -->
-					<!-- <section class="wrapper style1 align-center">
-						<div class="inner">
-							<h2>Ipsum sed consequat</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id ante sed ex pharetra lacinia sit amet vel massa. Donec facilisis laoreet nulla eu bibendum. Donec ut ex risus. Fusce lorem lectus, pharetra pretium massa et, hendrerit vestibulum odio lorem ipsum.</p>
-							<div class="items style1 medium onscroll-fade-in">
-								<section>
-									<span class="icon style2 major fa-gem"></span>
-									<h3>Lorem</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon solid style2 major fa-save"></span>
-									<h3>Ipsum</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon solid style2 major fa-chart-bar"></span>
-									<h3>Dolor</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon solid style2 major fa-wifi"></span>
-									<h3>Amet</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon solid style2 major fa-cog"></span>
-									<h3>Magna</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon style2 major fa-paper-plane"></span>
-									<h3>Tempus</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon solid style2 major fa-desktop"></span>
-									<h3>Aliquam</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon solid style2 major fa-sync-alt"></span>
-									<h3>Elit</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon solid style2 major fa-hashtag"></span>
-									<h3>Morbi</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon solid style2 major fa-bolt"></span>
-									<h3>Turpis</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon solid style2 major fa-envelope"></span>
-									<h3>Ultrices</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-								<section>
-									<span class="icon solid style2 major fa-leaf"></span>
-									<h3>Risus</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-								</section>
-							</div>
-						</div>
-					</section> -->
-
-				<!-- Seven -->
-					<!-- <section class="wrapper style1 align-center">
-						<div class="inner medium">
-							<h2>Get in touch</h2>
-							<form method="post" action="#">
-								<div class="fields">
-									<div class="field half">
-										<label for="name">Name</label>
-										<input type="text" name="name" id="name" value="" />
-									</div>
-									<div class="field half">
-										<label for="email">Email</label>
-										<input type="email" name="email" id="email" value="" />
-									</div>
-									<div class="field">
-										<label for="message">Message</label>
-										<textarea name="message" id="message" rows="6"></textarea>
-									</div>
-								</div>
-								<ul class="actions special">
-									<li><input type="submit" name="submit" id="submit" value="Send Message" /></li>
-								</ul>
-							</form>
-
-						</div>
-					</section> -->
-
-				<!-- Footer -->
-
-			</div>
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-
-	</body>
+</div>
+</body>
 </html>
