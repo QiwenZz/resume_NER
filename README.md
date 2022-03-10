@@ -10,7 +10,7 @@ $ git clone https://github.com/QiwenZz/resume_NER.git
 $ cd resume_NER
 ```
 
-3. Then you can choose to run the model with different experiment
+2. Then you can choose to run the model with different experiment
 ```shell
 $ python run.py 
 $              | --test
