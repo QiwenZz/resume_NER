@@ -1,0 +1,4 @@
+#files to ignore
+full_dataset.csv/
+website_resumes.csv/
+
