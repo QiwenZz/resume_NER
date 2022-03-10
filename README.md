@@ -22,7 +22,7 @@ $              | --validation-set
 ```
 
 Visit our project website:
-qiwenzz.github.io/resume_ner/
+https://qiwenzz.github.io/resume_NER/
 
 Visit our application website repo:
 https://github.com/Haibo3939/NER-Web-App
