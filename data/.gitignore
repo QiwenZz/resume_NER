@@ -1,4 +1,7 @@
 #files to ignore
-full_dataset.csv/
-website_resumes.csv/
-
+/full_dataset.csv
+/website_resumes.csv
+/annotate_emmy
+/annotation_zqw
+/annotations_LHB
+/Archive_YSY
