@@ -21,9 +21,9 @@ USER root
 
 
 
-RUN apt-get install python-dev 
-RUN apt-get install python3-dev 
-RUN apt-get install libevent-dev
+#RUN apt-get install python-dev 
+#RUN apt-get install python3-dev 
+#RUN apt-get install libevent-dev
 #RUN apt-get install python-pip && pip install --upgrade pip
 
 #RUN apt-get install gcc
@@ -32,7 +32,7 @@ RUN apt-get install libevent-dev
 
 # 3) install packages using notebook user
 USER jovyan
-FROM python:3.7
+#FROM python:3.7
 
 RUN pip install setuptools wheel
 RUN pip install --upgrade pip
@@ -48,4 +48,3 @@ RUN pip install spacy[transformers,cuda112]
 
 # Override command to disable running jupyter notebook at launch
 # CMD ["/bin/bash"]
-
