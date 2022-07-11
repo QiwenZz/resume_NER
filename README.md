@@ -1,4 +1,4 @@
-# resume_NER_w_BOND
+# resume_NER
 
 #### To test, please use: python run.py --test=True
 
